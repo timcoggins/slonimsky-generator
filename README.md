@@ -1,4 +1,4 @@
-# Slominsky Scale Generator
+# Slonimsky Scale Generator
 
 A generator of musical scales based on the concepts of Nicolas Slonimskys Thesaurus of Scales and Melodic patterns.
 
