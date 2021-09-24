@@ -101,6 +101,51 @@ function generateScale(divisions, start, notes, interpolation, interpolationInte
 
 
 
+function play() {
+    if (ABCJS.synth.supportsAudio()) {
+
+        const divisions = parseInt(divisionInput.value);
+        const starting = parseInt(startingNote.value)
+        const notes = parseInt(numberOfNotes.value)
+        const interpolation = parseInt(interpolationInput.value)
+        const interpolationInterval = [parseInt(interpolationIntervalInput1.value), parseInt(interpolationIntervalInput2.value), parseInt(interpolationIntervalInput3.value), parseInt(interpolationIntervalInput4.value)]
+       
+        disableInterpolationInputs(interpolation)
+        
+
+      var abc = convertToAbcString(generateScale(divisions, starting, notes, interpolation, interpolationInterval));
+      var visualObj = ABCJS.renderAbc("*", abc)[0];
+
+      var midiBuffer = new ABCJS.synth.CreateSynth();
+      midiBuffer.init({
+        //audioContext: new AudioContext(),
+        visualObj: visualObj,
+        // sequence: [],
+        millisecondsPerMeasure: 2000,
+        // debugCallback: function(message) { console.log(message) },
+        options: {
+          // soundFontUrl: "https://paulrosen.github.io/midi-js-soundfonts/FluidR3_GM/" ,
+          // sequenceCallback: function(noteMapTracks, callbackContext) { return noteMapTracks; },
+          // callbackContext: this,
+          // onEnded: function(callbackContext),
+          // pan: [ -0.5, 0.5 ]
+        }
+      }).then(function (response) {
+        console.log(response);
+        midiBuffer.prime().then(function (response) {
+          midiBuffer.start();
+        });
+      }).catch(function (error) {
+        console.warn("Audio problem:", error);
+      });
+    } else {
+      document.querySelector(".error").innerHTML = "<div class='audio-error'>Audio is not supported in this browser.</div>";
+    }
+  }
+
+
+
+
 
 const divisionInput = document.getElementById("divisions-input");
 const startingNote = document.getElementById("starting-input");
