@@ -112,8 +112,10 @@ function play() {
        
         disableInterpolationInputs(interpolation)
         
+        let noteArray = generateScale(divisions, starting, notes, interpolation, interpolationInterval);
+        if (descending.checked===true) noteArray.reverse();
 
-      var abc = convertToAbcString(generateScale(divisions, starting, notes, interpolation, interpolationInterval));
+      var abc = convertToAbcString(noteArray);
       var visualObj = ABCJS.renderAbc("*", abc)[0];
 
       var midiBuffer = new ABCJS.synth.CreateSynth();
@@ -155,6 +157,7 @@ const interpolationIntervalInput1 = document.getElementById("interpolation-inter
 const interpolationIntervalInput2 = document.getElementById("interpolation-interval-input2");
 const interpolationIntervalInput3 = document.getElementById("interpolation-interval-input3");
 const interpolationIntervalInput4 = document.getElementById("interpolation-interval-input4");
+const descending = document.getElementById("descending");
 
 
 function disableInterpolationInputs(number) {
@@ -186,8 +189,11 @@ function loading2() {
     const interpolationInterval = [parseInt(interpolationIntervalInput1.value), parseInt(interpolationIntervalInput2.value), parseInt(interpolationIntervalInput3.value), parseInt(interpolationIntervalInput4.value)]
    
     disableInterpolationInputs(interpolation)
+
+    let noteArray = generateScale(divisions, starting, notes, interpolation, interpolationInterval);
+    if (descending.checked===true) noteArray.reverse();
     
-    const abcString = convertToAbcString(generateScale(divisions, starting, notes, interpolation, interpolationInterval));
+    const abcString = convertToAbcString(noteArray);
     var visualOptions = { responsive: 'resize' };
     var visualObj = ABCJS.renderAbc("paper", abcString, visualOptions);
 }
