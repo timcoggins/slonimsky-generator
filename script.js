@@ -58,54 +58,92 @@ function convertNumberToNote(number) {
 }
 
 
+/**
+ * generateScale - Generates the scales!
+ * 
+ * @param 
+ * @returns 
+ */
 
+function generateScale(divisions, start, notes, interpolation, interpolationInterval) {
+    if (divisions <= 0) return;
+    //if (start <= 0) return;
+    if (notes <= 0) return;
 
+    console.log(interpolationInterval)
 
+    let myArray2 = [];
+    /*for(x = (40 + start); x < (40 + start + notes); x = (x + divisions)) {
+        myArray2.push(x);
+    }*/
 
+    let count = start + 48;
+    for (i = 0; i < notes; i++) {
+        
+        // base note
+        myArray2.push(count + (i * divisions));
 
-
-
-function load() {
-
-    myArray = [];
-    for(x = 50; x < 90; x++) {
-        myArray.push(x);
+        //console.log("BASE:" + (count + (i * divisions)));
+        //console.log("INTER:" + interpolation)
+        // interpolations
+        for (x = 0; x < interpolation; x++) {
+            myArray2.push(count + (i * divisions) + interpolationInterval[x]);
+            // from the base note,
+            //console.log(count + (i * divisions) + interpolationInterval[x])
+        }
     }
-
-    const abcString = convertToAbcString(myArray)
-    var visualOptions = { responsive: 'resize' };
-    var visualObj = ABCJS.renderAbc("paper", abcString, visualOptions);
+    //console.log(myArray2);
+    return myArray2; 
 }
+
+
+
+
+
+
+
+const divisionInput = document.getElementById("divisions-input");
+const startingNote = document.getElementById("starting-input");
+const numberOfNotes = document.getElementById("notes-input");
+const interpolationInput = document.getElementById("interpolation-input");
+const interpolationIntervalInput1 = document.getElementById("interpolation-interval-input1");
+const interpolationIntervalInput2 = document.getElementById("interpolation-interval-input2");
+const interpolationIntervalInput3 = document.getElementById("interpolation-interval-input3");
+const interpolationIntervalInput4 = document.getElementById("interpolation-interval-input4");
+
+
+function disableInterpolationInputs(number) {
+
+    console.log("NUMBER IS" + number)
+
+    interpolationIntervalInput1.disabled = true;
+    interpolationIntervalInput2.disabled = true;
+    interpolationIntervalInput3.disabled = true;
+    interpolationIntervalInput4.disabled = true;
+
+
+    if(number >= 4) interpolationIntervalInput4.disabled = false;
+    if(number >= 3) interpolationIntervalInput3.disabled = false;
+    if(number >= 2) interpolationIntervalInput2.disabled = false;
+    if(number >= 1) interpolationIntervalInput1.disabled = false;
+
+
+}
+
+
 
 function loading2() {
 
-    myArray2 = [];
-    for(x = 40; x < 100; x=x+5) {
-        myArray2.push(x);
-    }
-
-    const abcString = convertToAbcString(myArray2)
+    const divisions = parseInt(divisionInput.value);
+    const starting = parseInt(startingNote.value)
+    const notes = parseInt(numberOfNotes.value)
+    const interpolation = parseInt(interpolationInput.value)
+    const interpolationInterval = [parseInt(interpolationIntervalInput1.value), parseInt(interpolationIntervalInput2.value), parseInt(interpolationIntervalInput3.value), parseInt(interpolationIntervalInput4.value)]
+   
+    disableInterpolationInputs(interpolation)
+    
+    const abcString = convertToAbcString(generateScale(divisions, starting, notes, interpolation, interpolationInterval));
     var visualOptions = { responsive: 'resize' };
     var visualObj = ABCJS.renderAbc("paper", abcString, visualOptions);
 }
-
-
-
-
-
-
-
-
-/*
-function convertNumberToNote(number) {
-    if (number < 0 || number > 127) return;
-    noteNames = ['c\'\'', '^C', 'D', '^D', 'E', 'F', '^F', 'G', '^G', 'A', '^A', 'B']
-    const octave = Math.floor(number / 12) - 1 + OCTAVE_DISPLACEMENT;
-    return noteNames[number % 12] + octave.toString();
-}*/
-
-
-
-// C4 is C, C3 is C, C2 is C,, C1 is C,,,
-// C5 is c C6 is c\'  C7 is c\'\ C8 is c\'\'\'
 
